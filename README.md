@@ -27,7 +27,7 @@ root. Everything photographer-specific is sourced from there.
 
 1. Clone this repo and create a fresh repo:
    ```bash
-   git clone git@github.com:jessepomeroy/reflecting-pool-studio.git clientname-studio
+   git clone git@github.com:jessepomeroy/sanity-studio-template.git clientname-studio
    cd clientname-studio
    rm -rf .git && git init
    git remote add origin git@github.com:jessepomeroy/clientname-studio.git

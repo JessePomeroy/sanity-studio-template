@@ -1,4 +1,4 @@
-# AGENTS.md — reflecting-pool-studio
+# AGENTS.md — sanity-studio-template
 
 Template Sanity Studio for the photographer SaaS platform. Clone this repo for each new photographer client.
 
@@ -89,6 +89,7 @@ pnpm sanity deploy   # Deploy Studio to sanity.io
 
 This studio is the template for the photographer CRM platform:
 - **reflecting-pool** = SvelteKit template site
-- **reflecting-pool-studio** = Sanity CMS template (this repo)
+- **sanity-studio-template** = Sanity CMS template (this repo)
+- **reflecting-pool-studio** = Maggie's instance, cloned from this template
 - **@jessepomeroy/admin** = shared admin dashboard package
 - **Convex** = operational backend (orders, CRM, messages, notifications)
