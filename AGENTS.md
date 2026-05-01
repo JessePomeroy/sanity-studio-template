@@ -85,6 +85,45 @@ pnpm sanity deploy   # Deploy Studio to sanity.io
 
 ---
 
+## Cloning for a new client
+
+Agent checklist when standing up a new client studio from this template:
+
+1. **Create the new repo** — use GitHub's "Use this template" button, or:
+   ```bash
+   git clone git@github.com:jessepomeroy/sanity-studio-template.git <client>-studio
+   cd <client>-studio
+   rm -rf .git && git init
+   gh repo create jessepomeroy/<client>-studio --public --source=. --push
+   ```
+2. **Create the Sanity project** at https://sanity.io/manage. Note the `projectId` and dataset name (usually `production`).
+3. **Edit `client.config.ts`** — the only per-client file:
+   - `projectId`, `dataset`
+   - `studioTitle`, `dashboardHeading`, `dashboardSubtitle`
+   - `liveSiteUrl`, `adminDashboardUrl`
+   - `appId` — leave empty for first deploy
+4. **Edit `package.json` `name`** to match the new repo.
+5. **First deploy** — `pnpm install && pnpm sanity deploy`. Sanity prompts for a studio hostname and returns an `appId`; paste it into `client.config.ts` so subsequent deploys are non-interactive.
+6. **CORS** — add the spoke site's localhost + prod origins via the Sanity manage UI (or the Sanity MCP `add_cors_origin` tool).
+7. **Tokens** — issue per-environment tokens (see "Tokens" below) and store them in the spoke site / CI, not in this repo.
+
+Do NOT modify schemas, desk structure, or custom components in a client studio — those live in the template and need to flow back upstream. If a client needs a divergent schema, that's a signal to lift the change into the template (gated on a `client.config.ts` flag if optional).
+
+---
+
+## Tokens
+
+The studio itself authenticates interactively (`sanity login`) and does not need a token checked in. Tokens are issued per-project at sanity.io/manage → API → Tokens for downstream consumers:
+
+| Token | Role | Used by | Notes |
+|---|---|---|---|
+| Read | Viewer | Spoke site runtime (`reflecting-pool` etc.) | Reads published content. Skip if dataset is public and only published content is needed. |
+| Read+drafts | Viewer + draft access | Spoke site preview / draft mode | Required for Presentation tool's draft-mode toggle. |
+| Deploy | Deploy Studio | CI running `sanity deploy` non-interactively | Set as `SANITY_AUTH_TOKEN` in CI secrets. |
+| Editor | Editor | MCP scripts, migrations, seed data | Only issue when writes are actually needed. Treat as a privileged credential. |
+
+---
+
 ## Platform Context
 
 This studio is the template for the photographer CRM platform:
