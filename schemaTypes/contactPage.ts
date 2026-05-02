@@ -17,6 +17,11 @@ export const contactPage = defineType({
   type: "document",
   icon: EnvelopeIcon,
 
+  groups: [
+    { name: "content", title: "Content", default: true },
+    { name: "seo", title: "SEO" },
+  ],
+
   fields: [
     defineField({
       name: "heading",

@@ -17,6 +17,11 @@ export const siteSettings = defineType({
   type: "document",
   icon: CogIcon,
 
+  groups: [
+    { name: "content", title: "Content", default: true },
+    { name: "seo", title: "SEO" },
+  ],
+
   fields: [
     defineField({
       name: "artistName",

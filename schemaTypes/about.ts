@@ -6,6 +6,11 @@ export const about = defineType({
   title: "About",
   type: "document",
 
+  groups: [
+    { name: "content", title: "Content", default: true },
+    { name: "seo", title: "SEO" },
+  ],
+
   fields: [
     defineField({
       name: "name",
