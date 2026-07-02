@@ -15,14 +15,19 @@ import { AddDocumentIcon } from "@sanity/icons";
 import { Box, Button, Card, Flex, Heading, Stack, Text } from "@sanity/ui";
 import { useRouter } from "sanity/router";
 
-interface EmptyStateOptions {
-  title: string;
-  description: string;
-  type: string;
+interface EmptyStateProps {
+  options?: Record<string, unknown>;
 }
 
-export function EmptyState(props: { options: EmptyStateOptions }) {
-  const { title, description, type } = props.options;
+function getStringOption(options: Record<string, unknown> | undefined, key: string, fallback = "") {
+  const value = options?.[key];
+  return typeof value === "string" ? value : fallback;
+}
+
+export function EmptyState(props: EmptyStateProps) {
+  const title = getStringOption(props.options, "title", "No documents yet");
+  const description = getStringOption(props.options, "description");
+  const type = getStringOption(props.options, "type");
   const router = useRouter();
 
   return (
@@ -34,14 +39,16 @@ export function EmptyState(props: { options: EmptyStateOptions }) {
             <Text size={2} muted>
               {description}
             </Text>
-            <Box>
-              <Button
-                icon={AddDocumentIcon}
-                text="Create your first one"
-                tone="primary"
-                onClick={() => router.navigateIntent("create", { type })}
-              />
-            </Box>
+            {type && (
+              <Box>
+                <Button
+                  icon={AddDocumentIcon}
+                  text="Create your first one"
+                  tone="primary"
+                  onClick={() => router.navigateIntent("create", { type })}
+                />
+              </Box>
+            )}
           </Stack>
         </Box>
       </Flex>
