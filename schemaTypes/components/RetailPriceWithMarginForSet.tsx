@@ -18,11 +18,12 @@
  * `lumaPrintSetV2` schema.
  */
 
+import { buildMarginSummary } from "@jessepomeroy/print-catalog/pricing";
 import { Stack, Text } from "@sanity/ui";
 import type { FieldProps } from "sanity";
 import { useFormValue } from "sanity";
-import { getWholesaleCost } from "../constants/lumaprintsCatalog";
-import { computeFeeBreakdown, type VariantContext } from "./RetailPriceWithMargin";
+import { getWholesaleCost } from "../shared/printCatalog";
+import { FEE_CONFIG, type VariantContext } from "./RetailPriceWithMargin";
 
 export function RetailPriceWithMarginForSet(props: FieldProps) {
   // Read the parent variant (one path segment up from the retailPrice field).
@@ -50,22 +51,14 @@ export function RetailPriceWithMarginForSet(props: FieldProps) {
   } else if (totalWholesale === null) {
     // Defensive — should never hit since perPrintCost !== null implies totalWholesale !== null
     summary = "Wholesale cost unavailable.";
-  } else if (retail <= 0) {
-    summary = `Wholesale: $${totalWholesale.toFixed(2)} ($${perPrintCost.toFixed(2)} × ${imageCount} prints) · set a retail price to see take-home.`;
-  } else if (retail < totalWholesale) {
-    const loss = totalWholesale - retail;
-    summary = `Wholesale: $${totalWholesale.toFixed(2)} ($${perPrintCost.toFixed(2)} × ${imageCount} prints) · LOSS: $${loss.toFixed(2)}`;
   } else {
-    const { stripeFee, platformFee, takeHome } = computeFeeBreakdown(retail, totalWholesale);
-    const wholesaleSegment = `Wholesale: $${totalWholesale.toFixed(2)} ($${perPrintCost.toFixed(2)} × ${imageCount} prints)`;
-    if (takeHome <= 0) {
-      const platformSegment = platformFee > 0 ? ` · Platform fee: $${platformFee.toFixed(2)}` : "";
-      summary = `${wholesaleSegment} · Stripe fee: $${stripeFee.toFixed(2)}${platformSegment} · LOSS after fees: $${(-takeHome).toFixed(2)}`;
-    } else {
-      const takeHomePct = (takeHome / retail) * 100;
-      const platformSegment = platformFee > 0 ? ` · Platform fee: $${platformFee.toFixed(2)}` : "";
-      summary = `${wholesaleSegment} · Stripe fee: $${stripeFee.toFixed(2)}${platformSegment} · Take-home: $${takeHome.toFixed(2)} (${takeHomePct.toFixed(1)}%)`;
-    }
+    summary = buildMarginSummary({
+      retail,
+      wholesale: totalWholesale,
+      feeConfig: FEE_CONFIG,
+      wholesaleLabel: `Wholesale: $${totalWholesale.toFixed(2)} ($${perPrintCost.toFixed(2)} × ${imageCount} prints)`,
+      lossLabel: "for set",
+    });
   }
 
   return (

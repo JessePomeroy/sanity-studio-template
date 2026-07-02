@@ -21,13 +21,13 @@
 
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { RetailPriceWithMargin } from "./components/RetailPriceWithMargin";
+import { canvasSizeValidation } from "./shared/canvasValidation";
 import {
   getPaperBySlug,
   getSizeBySlug,
   PAPER_DROPDOWN_OPTIONS,
   SIZE_DROPDOWN_OPTIONS,
-} from "./constants/lumaprintsCatalog";
-import { canvasSizeValidation } from "./shared/canvasValidation";
+} from "./shared/printCatalog";
 
 export const lumaProductV2 = defineType({
   name: "lumaProductV2",

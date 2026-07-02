@@ -13,7 +13,7 @@
  * bundle discounts vs. buying prints individually.
  *
  * Differences from V1 `printSet`:
- *   - Catalog-aware paper + size dropdowns from `lumaprintsCatalog.ts`
+ *   - Catalog-aware paper + size dropdowns from `shared/printCatalog.ts`
  *     instead of free-form `availablePapers` strings
  *   - Per-paper × size variants instead of one base price + paper overrides
  *   - Inline margin display (RetailPriceWithMarginForSet)
@@ -24,13 +24,13 @@
 
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { RetailPriceWithMarginForSet } from "./components/RetailPriceWithMarginForSet";
+import { canvasSizeValidation } from "./shared/canvasValidation";
 import {
   getPaperBySlug,
   getSizeBySlug,
   PAPER_DROPDOWN_OPTIONS,
   SIZE_DROPDOWN_OPTIONS,
-} from "./constants/lumaprintsCatalog";
-import { canvasSizeValidation } from "./shared/canvasValidation";
+} from "./shared/printCatalog";
 
 export const lumaPrintSetV2 = defineType({
   name: "lumaPrintSetV2",

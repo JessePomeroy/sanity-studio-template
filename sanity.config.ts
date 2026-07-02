@@ -19,9 +19,9 @@ import DocumentsPane from "sanity-plugin-documents-pane";
 import { media } from "sanity-plugin-media";
 import { clientConfig } from "./client.config";
 import { schemaTypes } from "./schemaTypes";
-import { PRODUCT_CATEGORIES } from "./schemaTypes/shared/categoryOptions";
 import { MarkBackInStockAction } from "./schemaTypes/actions/MarkBackInStockAction";
 import { MarkSoldOutAction } from "./schemaTypes/actions/MarkSoldOutAction";
+import { PRODUCT_CATEGORIES } from "./schemaTypes/shared/categoryOptions";
 import { DashboardHome } from "./src/components/DashboardHome";
 import { EmptyState } from "./src/components/EmptyState";
 
@@ -204,20 +204,18 @@ export default defineConfig({
                       context,
                     }),
                     S.divider(),
-                    ...PRODUCT_CATEGORIES
-                      .filter((c) => c.value !== "prints")
-                      .map((c) =>
-                        S.listItem()
-                          .title(c.title)
-                          .child(
-                            S.documentList()
-                              .title(c.title)
-                              .schemaType("product")
-                              .filter('_type == "product" && category == $category')
-                              .params({ category: c.value })
-                              .defaultOrdering([{ field: "orderRank", direction: "asc" }]),
-                          ),
-                      ),
+                    ...PRODUCT_CATEGORIES.filter((c) => c.value !== "prints").map((c) =>
+                      S.listItem()
+                        .title(c.title)
+                        .child(
+                          S.documentList()
+                            .title(c.title)
+                            .schemaType("product")
+                            .filter('_type == "product" && category == $category')
+                            .params({ category: c.value })
+                            .defaultOrdering([{ field: "orderRank", direction: "asc" }]),
+                        ),
+                    ),
                     S.divider(),
                     S.listItem()
                       .title("Coupons")

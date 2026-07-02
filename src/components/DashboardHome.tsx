@@ -93,15 +93,7 @@ export function DashboardHome() {
   );
 }
 
-function StatCard({
-  label,
-  value,
-  suffix,
-}: {
-  label: string;
-  value: number;
-  suffix?: string;
-}) {
+function StatCard({ label, value, suffix }: { label: string; value: number; suffix?: string }) {
   return (
     <div style={styles.card}>
       <div style={styles.cardValue}>

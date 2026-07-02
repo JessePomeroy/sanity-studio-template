@@ -71,6 +71,21 @@ Add new singletons to `SINGLETON_TYPES` in `sanity.config.ts` AND create a desk 
 ### Client config is the only file to edit per client
 All photographer-specific values live in `client.config.ts`. Schemas, components, and desk structure are shared.
 
+### Private package installs need npm auth
+This template consumes private `@jessepomeroy/*` packages from GitHub Packages.
+The repo-level `.npmrc` maps the scope only; never commit a token. Before a
+fresh local `pnpm install`, run:
+
+```bash
+pnpm config set --location user //npm.pkg.github.com/:_authToken "$GITHUB_TOKEN"
+```
+
+Hosted installs must write the hosted token into npm config before install:
+
+```bash
+pnpm config set --location user //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN" && pnpm install --frozen-lockfile
+```
+
 ---
 
 ## Commands
@@ -103,7 +118,7 @@ Agent checklist when standing up a new client studio from this template:
    - `liveSiteUrl`, `adminDashboardUrl`
    - `appId` — leave empty for first deploy
 4. **Edit `package.json` `name`** to match the new repo.
-5. **First deploy** — `pnpm install && pnpm sanity deploy`. Sanity prompts for a studio hostname and returns an `appId`; paste it into `client.config.ts` so subsequent deploys are non-interactive.
+5. **First deploy** — authenticate GitHub Packages, then run `pnpm install && pnpm sanity deploy`. Sanity prompts for a studio hostname and returns an `appId`; paste it into `client.config.ts` so subsequent deploys are non-interactive.
 6. **CORS** — add the spoke site's localhost + prod origins via the Sanity manage UI (or the Sanity MCP `add_cors_origin` tool).
 7. **Tokens** — issue per-environment tokens (see "Tokens" below) and store them in the spoke site / CI, not in this repo.
 
