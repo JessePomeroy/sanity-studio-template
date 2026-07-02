@@ -155,9 +155,7 @@ export default defineConfig({
                     .title("Homepage")
                     .schemaType("homepage")
                     .child(
-                      S.documentTypeList("homepage")
-                        .title("Homepage")
-                        .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
+                      S.document().schemaType("homepage").documentId("homepage").title("Homepage"),
                     ),
                 ]
               : []),
@@ -175,9 +173,10 @@ export default defineConfig({
                     .title("Modeling & Acting")
                     .schemaType("modelingPage")
                     .child(
-                      S.documentTypeList("modelingPage")
-                        .title("Modeling & Acting")
-                        .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
+                      S.document()
+                        .schemaType("modelingPage")
+                        .documentId("modelingPage")
+                        .title("Modeling & Acting"),
                     ),
                 ]
               : []),

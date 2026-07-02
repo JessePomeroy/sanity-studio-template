@@ -22,8 +22,7 @@ export const homepage = defineType({
       rows: 3,
       group: "content",
       description: "Large text shown beneath the homepage navigation links.",
-      initialValue:
-        "Exploring light, movement, and sound as a photographer, director, model, and musician.",
+      initialValue: "Exploring light, place, and story through photography.",
       validation: (rule) => rule.required(),
     }),
 
@@ -80,7 +79,6 @@ export const homepage = defineType({
       ],
       initialValue: [
         { label: "about", href: "/about" },
-        { label: "modeling & acting", href: "/modeling" },
         { label: "photography", href: "/gallery" },
         { label: "booking", href: "/about#book" },
         { label: "shop prints", href: "/shop" },
