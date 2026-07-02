@@ -116,6 +116,7 @@ Agent checklist when standing up a new client studio from this template:
    - `projectId`, `dataset`
    - `studioTitle`, `dashboardHeading`, `dashboardSubtitle`
    - `liveSiteUrl`, `adminDashboardUrl`
+   - `enabledSchemas` for optional content modules the client frontend supports
    - `appId` — leave empty for first deploy
 4. **Edit `package.json` `name`** to match the new repo.
 5. **First deploy** — authenticate GitHub Packages, then run `pnpm install && pnpm sanity deploy`. Sanity prompts for a studio hostname and returns an `appId`; paste it into `client.config.ts` so subsequent deploys are non-interactive.

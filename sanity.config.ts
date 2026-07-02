@@ -26,7 +26,13 @@ import { DashboardHome } from "./src/components/DashboardHome";
 import { EmptyState } from "./src/components/EmptyState";
 
 // Singleton document IDs — ensures only one of each exists
-const SINGLETON_TYPES = new Set(["siteSettings", "about", "contactPage"]);
+const SINGLETON_TYPES = new Set([
+  "siteSettings",
+  "about",
+  "contactPage",
+  ...(clientConfig.enabledSchemas.homepage ? ["homepage"] : []),
+  ...(clientConfig.enabledSchemas.modelingPage ? ["modelingPage"] : []),
+]);
 const SINGLETON_ACTIONS = new Set(["publish", "discardChanges", "restore"]);
 
 // Document types that get stock-toggle actions (Mark sold out / Mark back in stock)
@@ -143,12 +149,37 @@ export default defineConfig({
             // ═══════════════════════════════════════
             // Content
             // ═══════════════════════════════════════
+            ...(clientConfig.enabledSchemas.homepage
+              ? [
+                  S.listItem()
+                    .title("Homepage")
+                    .schemaType("homepage")
+                    .child(
+                      S.document().schemaType("homepage").documentId("homepage").title("Homepage"),
+                    ),
+                ]
+              : []),
+
             orderableDocumentListDeskItem({
               type: "gallery",
               title: "Galleries",
               S,
               context,
             }),
+
+            ...(clientConfig.enabledSchemas.modelingPage
+              ? [
+                  S.listItem()
+                    .title("Modeling & Acting")
+                    .schemaType("modelingPage")
+                    .child(
+                      S.document()
+                        .schemaType("modelingPage")
+                        .documentId("modelingPage")
+                        .title("Modeling & Acting"),
+                    ),
+                ]
+              : []),
 
             // About — singleton (opens directly to the document)
             S.listItem()

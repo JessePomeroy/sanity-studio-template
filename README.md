@@ -41,6 +41,7 @@ root. Everything photographer-specific is sourced from there.
    - `dataset` → usually `production`
    - `studioTitle` / `dashboardHeading` / `dashboardSubtitle` → client branding
    - `liveSiteUrl` / `adminDashboardUrl` → client's deployed URLs
+   - `enabledSchemas` → optional content modules the client site actually uses
    - `appId` → leave empty until first deploy
 4. Edit `package.json` `name` field to match the new repo.
 5. Deploy:
@@ -54,6 +55,10 @@ root. Everything photographer-specific is sourced from there.
 
 **All schemas, desk customization, custom components, and actions are
 inherited automatically.**
+
+Optional content modules such as `homepage` and `modelingPage` are included in
+the template, but disabled by default. Enable them only when the client
+frontend has matching routes and GROQ queries.
 
 ## Environment variables (optional)
 
