@@ -16,6 +16,8 @@
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
     "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "check": "biome check . && tsc --noEmit && sanity build && corepack pnpm audit --audit-level low",
     "format": "biome format --write .",
     "prepare": "husky"
   },
