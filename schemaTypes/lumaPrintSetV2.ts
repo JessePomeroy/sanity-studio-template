@@ -17,9 +17,8 @@
  *     instead of free-form `availablePapers` strings
  *   - Per-paper × size variants instead of one base price + paper overrides
  *   - Inline margin display (RetailPriceWithMarginForSet)
- *   - Designed to flow through the Sharp print pipeline (PR #6 of LumaPrints
- *     expansion) and the post-PR-#8 cart system, not the legacy paper-string
- *     cart path.
+ *   - Uses the current catalog-aware cart and print-compositing pipeline,
+ *     not the legacy paper-string cart path.
  */
 
 import { defineArrayMember, defineField, defineType } from "sanity";

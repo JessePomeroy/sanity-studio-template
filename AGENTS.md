@@ -6,7 +6,7 @@ Template Sanity Studio for the photographer SaaS platform. Clone this repo for e
 
 ## Stack
 
-- **CMS:** Sanity Studio v3 (sanity 5.20+)
+- **CMS:** Sanity Studio v3 (see `package.json` for the installed version)
 - **Plugins:** `@sanity/orderable-document-list`, `@sanity/vision`, `@sanity/presentation`, `sanity-plugin-documents-pane`, `sanity-plugin-media`
 - **Linting:** Biome (check + format)
 - **Config:** All client-specific values in `client.config.ts`
@@ -148,3 +148,15 @@ This studio is the template for the photographer CRM platform:
 - **reflecting-pool-studio** = Maggie's instance, cloned from this template
 - **@jessepomeroy/admin** = shared admin dashboard package
 - **Convex** = operational backend (orders, CRM, messages, notifications)
+
+## Downstream sync
+
+- `../angelsrest-studio` and `../reflecting-pool-studio` are downstream
+  instances.
+- Shared schema, desk, component, action, or dependency changes land here
+  first, then sync downstream as focused commits.
+- Downstream-only changes should be limited to `client.config.ts`, package
+  identity, deployment metadata, and genuinely client-specific optional-module
+  flags.
+- Verify the template first, then run the same checks in every affected
+  downstream Studio.
