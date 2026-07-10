@@ -7,16 +7,15 @@
  * cost + computed margin inline next to the retail price input via the
  * `RetailPriceWithMargin` custom field component.
  *
- * Currently scoped to Fine Art Paper variants. Canvas, framed FAP, and
- * bordered prints (Sharp-composited) will be added in follow-up audit #23
- * PRs as additional variant types or sibling product schemas.
+ * Variants can use the shared fine-art-paper and canvas catalog. Product
+ * settings also control whether customer-facing border and framed options
+ * are available.
  *
  * The legacy `product` schema still handles non-print products (postcards,
  * tapestries, digital, merchandise). Print products are fully on V2.
  *
- * TODO (follow-up PR): replace the manual variants array with a matrix UI
- * (rows = papers, columns = sizes) that auto-populates all 48 combinations
- * and lets the photographer toggle/edit prices in a single grid view.
+ * Variants remain an explicit array so editors opt into only the material
+ * and size combinations that are actually sold.
  */
 
 import { defineArrayMember, defineField, defineType } from "sanity";

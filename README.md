@@ -62,7 +62,7 @@ frontend has matching routes and GROQ queries.
 
 ## Environment variables (optional)
 
-Create a `.env` file to override default fee calculations for client studios
+Create a `.env.local` file to override default fee calculations for client studios
 using Stripe Connect:
 
 ```
@@ -109,3 +109,12 @@ pnpm lint         # biome check
 pnpm format       # biome format --write
 pnpm sanity deploy   # deploy to sanity.studio (uses pinned appId)
 ```
+
+## Downstream instances
+
+- `../angelsrest-studio`
+- `../reflecting-pool-studio`
+
+Shared schemas, desk structure, actions, and components land here first. Sync
+the resulting commits downstream; do not maintain parallel fixes independently
+in each client Studio.
