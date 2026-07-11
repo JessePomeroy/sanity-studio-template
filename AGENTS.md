@@ -68,8 +68,11 @@ When modifying schema types, check the frontend's GROQ queries. Field renames or
 ### Singleton types need desk structure + action filter
 Add new singletons to `SINGLETON_TYPES` in `sanity.config.ts` AND create a desk structure entry.
 
-### Client config is the only file to edit per client
-All photographer-specific values live in `client.config.ts`. Schemas, components, and desk structure are shared.
+### Client runtime config stays centralized
+All photographer-specific runtime values live in `client.config.ts`. Package
+identity and Sanity deployment metadata also change during initial bootstrap.
+Schemas, components, actions, and desk structure remain shared and must flow
+from this template through focused downstream sync commits.
 
 ### Private package installs need npm auth
 This template consumes private `@jessepomeroy/*` packages from GitHub Packages.
@@ -143,7 +146,7 @@ The studio itself authenticates interactively (`sanity login`) and does not need
 ## Platform Context
 
 This studio is the template for the photographer CRM platform:
-- **reflecting-pool** = SvelteKit template site
+- **reflecting-pool** = Maggie's SvelteKit client spoke
 - **sanity-studio-template** = Sanity CMS template (this repo)
 - **reflecting-pool-studio** = Maggie's instance, cloned from this template
 - **@jessepomeroy/admin** = shared admin dashboard package
