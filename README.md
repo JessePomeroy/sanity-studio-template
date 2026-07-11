@@ -24,8 +24,9 @@ deploy.
 
 ## Cloning for a new client
 
-The only file you should need to edit is **`client.config.ts`** at the repo
-root. Everything photographer-specific is sourced from there.
+Client runtime configuration belongs in **`client.config.ts`** at the repo
+root. Initial bootstrap also changes the package name and Sanity deployment
+metadata; shared schemas, components, actions, and desk structure do not fork.
 
 1. Clone this repo and create a fresh repo:
    ```bash
@@ -53,8 +54,9 @@ root. Everything photographer-specific is sourced from there.
    Sanity will prompt for a studio hostname and assign a new `appId`. Copy
    that `appId` into `client.config.ts` so future deploys are non-interactive.
 
-**All schemas, desk customization, custom components, and actions are
-inherited automatically.**
+The clone starts from the template's schemas, desk customization, components,
+and actions. Later shared changes are not inherited automatically: land them in
+this template first, then sync the focused commits into downstream Studios.
 
 Optional content modules such as `homepage` and `modelingPage` are included in
 the template, but disabled by default. Enable them only when the client
