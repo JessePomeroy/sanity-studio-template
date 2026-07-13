@@ -45,7 +45,7 @@ function packageManifest(name, scripts = {}) {
     name,
     private: true,
     version: "1.0.0",
-    packageManager: "pnpm@10.33.0",
+    packageManager: "pnpm@10.34.5",
     scripts: { build: "sanity build", ...scripts },
     dependencies: { sanity: "^5.31.1" },
     devDependencies: { typescript: "^5.9.3" },
@@ -120,7 +120,7 @@ test("reports dependency and override drift by package field", async () => {
 test("reports every non-exempt package contract field", async () => {
   const templatePackage = packageManifest("template");
   const downstreamPackage = packageManifest("client");
-  downstreamPackage.packageManager = "pnpm@10.34.0";
+  downstreamPackage.packageManager = "pnpm@10.35.0";
   downstreamPackage.engines = { node: ">=24" };
   downstreamPackage.scripts.build = "sanity build --different";
   downstreamPackage.devDependencies.typescript = "^6.0.0";
@@ -141,16 +141,42 @@ test("reports exact shared tooling and lockfile drift", async () => {
     templatePackage,
     downstreamPackage,
     sharedFiles: {
-      "biome.json": ["{}\n", '{"linter":true}\n'],
       ".env.example": ["SHARED_NAME=\n", "DIFFERENT_NAME=\n"],
+      ".github/workflows/studio-ci.yml": ["permissions: {}\n", "permissions: read-all\n"],
+      "biome.json": ["{}\n", '{"linter":true}\n'],
       "pnpm-lock.yaml": ["lockfileVersion: '9.0'\n", "lockfileVersion: '9.1'\n"],
     },
   });
 
   assert.deepEqual(await compareStudioRoots(fixture.template, fixture.downstream), [
     "content differs: .env.example",
+    "content differs: .github/workflows/studio-ci.yml",
     "content differs: biome.json",
     "content differs: pnpm-lock.yaml",
+  ]);
+});
+
+test("reports unexpected workflows and a missing shared CI contract test", async () => {
+  const templatePackage = packageManifest("template");
+  const downstreamPackage = packageManifest("client");
+  const fixture = await createFixture({
+    templatePackage,
+    downstreamPackage,
+    sharedFiles: {
+      ".github/workflows/studio-ci.yml": ["permissions: {}\n", "permissions: {}\n"],
+      ".github/workflows/unreviewed.yml": ["", "permissions: write-all\n"],
+      "scripts/studio-ci-contract.test.mjs": ["export {};\n", "export {};\n"],
+    },
+  });
+
+  await Promise.all([
+    rm(path.join(fixture.template, ".github/workflows/unreviewed.yml")),
+    rm(path.join(fixture.downstream, "scripts/studio-ci-contract.test.mjs")),
+  ]);
+
+  assert.deepEqual(await compareStudioRoots(fixture.template, fixture.downstream), [
+    "unexpected downstream file: .github/workflows/unreviewed.yml",
+    "missing downstream file: scripts/studio-ci-contract.test.mjs",
   ]);
 });
 

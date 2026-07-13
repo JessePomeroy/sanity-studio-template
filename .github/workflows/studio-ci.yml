@@ -1,0 +1,74 @@
+name: Studio CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  studio-ci:
+    name: Studio CI
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      COREPACK_ENABLE_PROJECT_SPEC: "1"
+      COREPACK_ENV_FILE: "0"
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Confirm trusted pull request
+        env:
+          EVENT_ACTOR: ${{ github.actor }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_ACTOR" != "JessePomeroy" || "$TRIGGERING_ACTOR" != "JessePomeroy" || "$HEAD_REPOSITORY" != "$GITHUB_REPOSITORY" || "$PR_AUTHOR" != "JessePomeroy" ]]; then
+            echo "::error::Private-package CI requires a JessePomeroy-triggered, owned, and authored pull request."
+            exit 1
+          fi
+
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "22.23.1"
+          registry-url: https://npm.pkg.github.com
+          scope: "@jessepomeroy"
+          package-manager-cache: false
+          token: ""
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Verify package manager before exposing the registry token
+        env:
+          EXPECTED_PACKAGE_MANAGER: "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e"
+        run: |
+          set -euo pipefail
+          node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            const manifest = JSON.parse(readFileSync("package.json", "utf8"));
+            if (manifest.packageManager !== process.env.EXPECTED_PACKAGE_MANAGER) {
+              console.error("packageManager must match the reviewed CI pin");
+              process.exit(1);
+            }
+          '
+          test "$(corepack pnpm --version)" = "10.34.5"
+
+      - name: Install frozen dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+        run: corepack pnpm install --frozen-lockfile --ignore-pnpmfile --ignore-scripts
+
+      - name: Run full Studio check without a registry token
+        run: corepack pnpm check

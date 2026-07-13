@@ -45,7 +45,10 @@ metadata; shared schemas, components, actions, and desk structure do not fork.
    - `enabledSchemas` → optional content modules the client site actually uses
    - `appId` → leave empty until first deploy
 4. Edit `package.json` `name` field to match the new repo.
-5. Deploy:
+5. Before relying on hosted CI, activate the exact provider boundary described
+   under [GitHub Packages auth](#github-packages-auth), grant the new repository
+   Read-only package access, and prove a Jesse-owned pull request.
+6. Deploy:
    ```bash
    pnpm config set --location user //npm.pkg.github.com/:_authToken "$GITHUB_TOKEN"
    pnpm install
@@ -98,17 +101,41 @@ Packages token with `read:packages` access into your user npm config:
 pnpm config set --location user //npm.pkg.github.com/:_authToken "$GITHUB_TOKEN"
 ```
 
-For CI or another hosted install, setting `NODE_AUTH_TOKEN` alone is not
-enough. The install command must write that token into npm config before
-dependency installation:
+Hosted CI must never write the literal token into persistent npm config. The
+shared GitHub Actions workflow uses `actions/setup-node` with `registry-url` to
+write a `${NODE_AUTH_TOKEN}` placeholder, then exposes the ephemeral repository
+token only to its repository-controlled install step. The pinned checkout
+action receives the token transiently but does not persist its credentials.
+Copy that workflow pattern for another hosted environment; do not carry the
+token into project-controlled checks or later steps.
 
-```bash
-pnpm config set --location user //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN" && pnpm install --frozen-lockfile
-```
+The Studio repositories are public. Roll out hosted access in this order:
+
+1. Configure GitHub **Workflow Execution Protections** as **Active**, allowing
+   only the exact `JessePomeroy` actor and only the `pull_request` event.
+2. Grant the repository **Read**, never Write or Admin, under the private
+   package's **Manage Actions access**.
+3. Prove the hosted check on a Jesse-owned branch and pull request.
+
+If Workflow Execution Protections are unavailable, do not grant package access;
+hosted installation must remain fail-closed. External and Dependabot changes
+are reviewed and then restaged on a Jesse-owned branch; their workflows must
+not receive package access. The shared Studio CI workflow uses the ephemeral
+repository token in repository-controlled commands only for a frozen install
+with lifecycle scripts and `.pnpmfile.cjs` hooks disabled. Its pinned checkout
+action receives the token transiently without persisting credentials. The
+workflow disables repository `.corepack.env` overrides, verifies the
+security-fixed package-manager pin before credential exposure, pins every action
+to a full commit SHA, and does not cache or upload private package files.
+
+Rollback starts by revoking the package's repository Read grant. Only then
+disable or revert the workflow or Workflow Execution Protection; never leave
+package access active while weakening the provider policy.
 
 `pnpm sanity deploy` builds from the current checkout, so a local deploy only
-needs the local auth setup before `pnpm install`. If a hosted deploy installs
-dependencies first, run the hosted config command above before that install.
+needs the local auth setup before `pnpm install`. A hosted deploy that installs
+dependencies first must use the same placeholder-and-scoped-environment pattern
+as the shared workflow.
 
 ## Local development
 
