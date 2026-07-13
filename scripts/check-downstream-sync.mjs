@@ -7,6 +7,7 @@ import { isDeepStrictEqual } from "node:util";
 const templateRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const exactSharedPaths = [
   ".env.example",
+  ".github/workflows",
   ".gitignore",
   ".husky/pre-commit",
   ".husky/pre-push",
@@ -18,6 +19,7 @@ const exactSharedPaths = [
   "sanity.cli.ts",
   "sanity.config.ts",
   "schemaTypes",
+  "scripts/studio-ci-contract.test.mjs",
   "src",
   "static",
   "tsconfig.json",

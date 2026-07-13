@@ -83,11 +83,43 @@ fresh local `pnpm install`, run:
 pnpm config set --location user //npm.pkg.github.com/:_authToken "$GITHUB_TOKEN"
 ```
 
-Hosted installs must write the hosted token into npm config before install:
+Hosted CI must never persist a literal token in npm config. GitHub Actions must
+use `actions/setup-node` with `registry-url`, which writes a
+`${NODE_AUTH_TOKEN}` placeholder, and expose the ephemeral token only on the
+single repository-controlled install step. The pinned checkout action receives
+the token transiently but does not persist its credentials. Copy
+`.github/workflows/studio-ci.yml`; do not carry the token into
+project-controlled checks or later steps.
 
-```bash
-pnpm config set --location user //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN" && pnpm install --frozen-lockfile
-```
+### Private-package CI needs a provider trust boundary
+
+This repository is public, so package access must not be granted to ordinary
+fork-triggered workflows. Configure GitHub **Workflow Execution Protections**
+as **Active**, permitting only the exact `JessePomeroy` actor and only the
+`pull_request` event. Then add the repository under the private package's
+**Manage Actions access** with **Read**, never Write or Admin, and prove the
+hosted check on a Jesse-owned PR. If Workflow Execution Protections are not
+available, do not grant package access; hosted installation must remain
+fail-closed.
+
+The shared `.github/workflows/studio-ci.yml` is defense in depth: it checks the
+event actor, rerun actor, head repository, and PR author; uses only SHA-pinned
+GitHub actions; verifies the exact security-fixed package-manager pin before
+credential exposure; prevents repository `.corepack.env` overrides; disables
+caches and persisted checkout credentials; and exposes the ephemeral repository
+token to repository-controlled commands only during a frozen install with
+lifecycle scripts and `.pnpmfile.cjs` hooks disabled. The pinned checkout action
+receives it transiently without persisting credentials. The provider policy is
+the actual boundary because pull-request code can edit its own workflow.
+
+Do not allow external contributors or Dependabot to execute this workflow.
+Review those changes, then restage accepted changes on a `JessePomeroy`-owned
+branch and PR. Do not add `push`, `pull_request_target`, dispatch, scheduled, or
+other package-bearing workflow events without a separate security review.
+Rollback in the opposite trust order: revoke the package's repository Read
+grant first, then disable or revert the workflow or Workflow Execution
+Protection. Never leave package access active while weakening the provider
+policy.
 
 ---
 
@@ -122,9 +154,10 @@ Agent checklist when standing up a new client studio from this template:
    - `enabledSchemas` for optional content modules the client frontend supports
    - `appId` — leave empty for first deploy
 4. **Edit `package.json` `name`** to match the new repo.
-5. **First deploy** — authenticate GitHub Packages, then run `pnpm install && pnpm sanity deploy`. Sanity prompts for a studio hostname and returns an `appId`; paste it into `client.config.ts` so subsequent deploys are non-interactive.
-6. **CORS** — add the spoke site's localhost + prod origins via the Sanity manage UI (or the Sanity MCP `add_cors_origin` tool).
-7. **Tokens** — issue per-environment tokens (see "Tokens" below) and store them in the spoke site / CI, not in this repo.
+5. **Hosted package boundary** — activate exact-actor, pull-request-only Workflow Execution Protections; grant the new repository Read-only package access; and prove a Jesse-owned pull request. If the provider control is unavailable, do not grant package access.
+6. **First deploy** — authenticate GitHub Packages, then run `pnpm install && pnpm sanity deploy`. Sanity prompts for a studio hostname and returns an `appId`; paste it into `client.config.ts` so subsequent deploys are non-interactive.
+7. **CORS** — add the spoke site's localhost + prod origins via the Sanity manage UI (or the Sanity MCP `add_cors_origin` tool).
+8. **Tokens** — issue per-environment tokens (see "Tokens" below) and store them in the spoke site / CI, not in this repo.
 
 Do NOT modify schemas, desk structure, or custom components in a client studio — those live in the template and need to flow back upstream. If a client needs a divergent schema, that's a signal to lift the change into the template (gated on a `client.config.ts` flag if optional).
 
