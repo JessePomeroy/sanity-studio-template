@@ -67,6 +67,11 @@ When modifying schema types, check the frontend's GROQ queries. Field renames or
 
 ### Singleton types need desk structure + action filter
 Add new singletons to `SINGLETON_TYPES` in `sanity.config.ts` AND create a desk structure entry.
+Existing deployments may store `about`, `contactPage`, and `siteSettings` under
+generated document IDs. Keep those desk entries on document lists until every
+downstream's published documents, drafts, and references have been inventoried
+and an explicit fixed-ID migration has been backed up and verified. Never switch
+an existing singleton to a literal `documentId` as a source-only cleanup.
 
 ### Client runtime config stays centralized
 All photographer-specific runtime values live in `client.config.ts`. Package

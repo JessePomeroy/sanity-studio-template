@@ -19,6 +19,7 @@ const exactSharedPaths = [
   "sanity.cli.ts",
   "sanity.config.ts",
   "schemaTypes",
+  "scripts/singleton-desk-contract.test.mjs",
   "scripts/studio-ci-contract.test.mjs",
   "src",
   "static",
