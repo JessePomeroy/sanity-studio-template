@@ -15,10 +15,12 @@
     "build": "sanity build",
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
-    "lint": "biome check .",
-    "typecheck": "tsc --noEmit",
+    "lint": "biome check . && eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit --incremental false",
+    "test": "node --test",
     "check:downstream-sync": "node scripts/check-downstream-sync.mjs",
-    "check": "biome check . && tsc --noEmit && sanity build && corepack pnpm audit --audit-level low",
+    "test:downstream-sync": "node --test scripts/check-downstream-sync.test.mjs",
+    "check": "corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test && sanity build && corepack pnpm audit --audit-level low",
     "format": "biome format --write .",
     "prepare": "husky"
   },
@@ -28,26 +30,26 @@
   "dependencies": {
     "@jessepomeroy/print-catalog": "^0.2.0",
     "@sanity/icons": "^3.7.4",
-    "@sanity/orderable-document-list": "^1.5.0",
+    "@sanity/orderable-document-list": "^1.5.1",
     "@sanity/presentation": "^2.0.0",
     "@sanity/ui": "^3.1.14",
     "@sanity/vision": "^5.31.1",
-    "react": "^19.1",
-    "react-dom": "^19.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "sanity": "^5.31.1",
     "sanity-plugin-documents-pane": "^3.0.2",
-    "sanity-plugin-media": "^4.1.1",
-    "styled-components": "^6.1.18"
+    "sanity-plugin-media": "^4.2.0",
+    "styled-components": "^6.4.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.4",
+    "@biomejs/biome": "^2.4.14",
     "@sanity/eslint-config-studio": "^6.0.0",
-    "@types/react": "^19.1",
-    "eslint": "^9.28",
+    "@types/react": "^19.2.14",
+    "eslint": "^9.39.4",
     "husky": "^9.1.7",
-    "lint-staged": "^16.3.1",
-    "prettier": "^3.5",
-    "typescript": "^5.8"
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.3",
+    "typescript": "^5.9.3"
   },
   "prettier": {
     "semi": false,
@@ -56,7 +58,7 @@
     "singleQuote": true
   },
   "lint-staged": {
-    "*.{js,ts}": [
+    "*.{js,jsx,mjs,cjs,ts,tsx}": [
       "eslint --max-warnings=0"
     ]
   },
@@ -88,6 +90,7 @@
       "uuid@11.1.0": "11.1.1",
       "uuid@10.0.0": "11.1.1",
       "uuid@13.0.0": "13.0.1",
+      "vite@>=7.0.0 <=7.3.4": "7.3.6",
       "ws@>=8.0.0 <8.21.0": "8.21.0"
     }
   }
