@@ -74,6 +74,12 @@ Optional content modules such as `homepage` and `modelingPage` are included in
 the template, but disabled by default. Enable them only when the client
 frontend has matching routes and GROQ queries.
 
+The `about`, `contactPage`, and `siteSettings` desk entries intentionally open
+document lists. Existing client datasets may use generated IDs for those
+documents. Do not replace the lists with literal document IDs unless every
+affected client's published documents, drafts, and references are inventoried
+and migrated through an explicit, backed-up content operation.
+
 ## Environment variables (optional)
 
 Create a `.env.local` file to override default fee calculations for client studios

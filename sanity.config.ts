@@ -181,21 +181,24 @@ export default defineConfig({
                 ]
               : []),
 
-            // About — singleton (opens directly to the document)
+            // About — legacy deployments may use generated document IDs
             S.listItem()
               .title("About")
               .schemaType("about")
-              .child(S.document().schemaType("about").documentId("about").title("About")),
+              .child(
+                S.documentTypeList("about")
+                  .title("About")
+                  .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
+              ),
 
             // Contact & Booking — singleton
             S.listItem()
               .title("Contact & Booking")
               .schemaType("contactPage")
               .child(
-                S.document()
-                  .schemaType("contactPage")
-                  .documentId("contactPage")
-                  .title("Contact & Booking"),
+                S.documentTypeList("contactPage")
+                  .title("Contact & Booking")
+                  .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
               ),
 
             S.divider(),
@@ -278,10 +281,9 @@ export default defineConfig({
               .title("Site Settings")
               .schemaType("siteSettings")
               .child(
-                S.document()
-                  .schemaType("siteSettings")
-                  .documentId("siteSettings")
-                  .title("Site Settings"),
+                S.documentTypeList("siteSettings")
+                  .title("Site Settings")
+                  .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
               ),
           ]);
       },
