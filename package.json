@@ -17,6 +17,7 @@
     "deploy-graphql": "sanity graphql deploy",
     "lint": "biome check .",
     "typecheck": "tsc --noEmit",
+    "check:downstream-sync": "node scripts/check-downstream-sync.mjs",
     "check": "biome check . && tsc --noEmit && sanity build && corepack pnpm audit --audit-level low",
     "format": "biome format --write .",
     "prepare": "husky"

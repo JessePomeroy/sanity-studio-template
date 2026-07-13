@@ -163,3 +163,5 @@ This studio is the template for the photographer CRM platform:
   flags.
 - Verify the template first, then run the same checks in every affected
   downstream Studio.
+- Run `pnpm check:downstream-sync` from the template after syncing. Pass explicit
+  downstream paths after `--` when the repositories are not standard siblings.

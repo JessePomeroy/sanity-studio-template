@@ -185,20 +185,17 @@ export default defineConfig({
             S.listItem()
               .title("About")
               .schemaType("about")
-              .child(
-                S.documentTypeList("about")
-                  .title("About")
-                  .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
-              ),
+              .child(S.document().schemaType("about").documentId("about").title("About")),
 
             // Contact & Booking — singleton
             S.listItem()
               .title("Contact & Booking")
               .schemaType("contactPage")
               .child(
-                S.documentTypeList("contactPage")
-                  .title("Contact & Booking")
-                  .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
+                S.document()
+                  .schemaType("contactPage")
+                  .documentId("contactPage")
+                  .title("Contact & Booking"),
               ),
 
             S.divider(),
@@ -281,9 +278,10 @@ export default defineConfig({
               .title("Site Settings")
               .schemaType("siteSettings")
               .child(
-                S.documentTypeList("siteSettings")
-                  .title("Site Settings")
-                  .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
+                S.document()
+                  .schemaType("siteSettings")
+                  .documentId("siteSettings")
+                  .title("Site Settings"),
               ),
           ]);
       },
