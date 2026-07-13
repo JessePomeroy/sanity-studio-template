@@ -57,6 +57,13 @@ metadata; shared schemas, components, actions, and desk structure do not fork.
 The clone starts from the template's schemas, desk customization, components,
 and actions. Later shared changes are not inherited automatically: land them in
 this template first, then sync the focused commits into downstream Studios.
+From the standard sibling-repository layout, verify that shared files match with:
+
+```bash
+pnpm check:downstream-sync
+```
+
+Pass downstream repository paths after `--` when using another layout.
 
 Optional content modules such as `homepage` and `modelingPage` are included in
 the template, but disabled by default. Enable them only when the client
