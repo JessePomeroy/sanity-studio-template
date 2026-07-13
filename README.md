@@ -55,8 +55,10 @@ metadata; shared schemas, components, actions, and desk structure do not fork.
    that `appId` into `client.config.ts` so future deploys are non-interactive.
 
 The clone starts from the template's schemas, desk customization, components,
-and actions. Later shared changes are not inherited automatically: land them in
-this template first, then sync the focused commits into downstream Studios.
+actions, dependencies, lockfile, scripts, and validation tooling. Later shared
+changes are not inherited automatically: land them in this template first, then
+sync the focused commits into downstream Studios. Only `client.config.ts`, the
+package `name`, deployment values, and client documentation are downstream-owned.
 From the standard sibling-repository layout, verify that shared files match with:
 
 ```bash
@@ -114,7 +116,7 @@ dependencies first, run the hosted config command above before that install.
 pnpm install
 pnpm dev          # localhost:3333
 pnpm build        # build studio bundle
-pnpm lint         # biome check
+pnpm lint         # Biome and ESLint checks
 pnpm format       # biome format --write
 pnpm sanity deploy   # deploy to sanity.studio (uses pinned appId)
 ```
@@ -124,6 +126,6 @@ pnpm sanity deploy   # deploy to sanity.studio (uses pinned appId)
 - `../angelsrest-studio`
 - `../reflecting-pool-studio`
 
-Shared schemas, desk structure, actions, and components land here first. Sync
-the resulting commits downstream; do not maintain parallel fixes independently
-in each client Studio.
+Shared schemas, desk structure, actions, components, dependencies, lockfile,
+scripts, and tooling land here first. Sync the resulting commits downstream; do
+not maintain parallel fixes independently in each client Studio.

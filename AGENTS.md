@@ -8,7 +8,7 @@ Template Sanity Studio for the photographer SaaS platform. Clone this repo for e
 
 - **CMS:** Sanity Studio v3 (see `package.json` for the installed version)
 - **Plugins:** `@sanity/orderable-document-list`, `@sanity/vision`, `@sanity/presentation`, `sanity-plugin-documents-pane`, `sanity-plugin-media`
-- **Linting:** Biome (check + format)
+- **Linting:** Biome and ESLint (check); Biome (format)
 - **Config:** All client-specific values in `client.config.ts`
 
 ---
@@ -96,7 +96,7 @@ pnpm config set --location user //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOK
 ```bash
 pnpm dev          # Run Studio locally (localhost:3333)
 pnpm build        # Build Studio for deployment
-pnpm lint         # Run Biome check
+pnpm lint         # Run Biome and ESLint checks
 pnpm format       # Run Biome format
 pnpm sanity deploy   # Deploy Studio to sanity.io
 ```
@@ -161,6 +161,12 @@ This studio is the template for the photographer CRM platform:
 - Downstream-only changes should be limited to `client.config.ts`, package
   identity, deployment metadata, and genuinely client-specific optional-module
   flags.
+- Within `package.json`, only `name` is downstream-owned. Package-manager and
+  engine pins, dependencies, scripts other than template-only sync commands,
+  overrides, and lint/tooling configuration remain shared. The lockfile and
+  shared tooling files must also flow from the template.
+- Environment values remain deployment-owned, but the variable-name contract
+  documented in `.env.example` is shared and must stay synchronized.
 - Verify the template first, then run the same checks in every affected
   downstream Studio.
 - Run `pnpm check:downstream-sync` from the template after syncing. Pass explicit
