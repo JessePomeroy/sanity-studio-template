@@ -52,7 +52,7 @@ test("pins the hosted toolchain and avoids credential-bearing caches or artifact
     "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e",
   ]);
   assert.match(workflow, /^ {4}runs-on: ubuntu-24\.04$/m);
-  assert.match(workflow, /^ {10}node-version: "22\.23\.1"$/m);
+  assert.match(workflow, /^ {10}node-version: "24\.18\.0"$/m);
   assert.match(workflow, /^ {10}persist-credentials: false$/m);
   assert.match(workflow, /^ {10}package-manager-cache: false$/m);
   assert.match(workflow, /^ {10}token: ""$/m);
