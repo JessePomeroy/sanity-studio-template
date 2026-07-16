@@ -99,3 +99,11 @@ test("limits the registry token to a hook-free, script-free frozen install", () 
     expectedInstallStep,
   );
 });
+
+test("uses a bulk-advisory-compatible security audit without changing the install manager", () => {
+  assert.equal(
+    packageManifest.scripts["security:audit"],
+    "corepack pnpm@11.4.0 --pm-on-fail=ignore audit --audit-level low",
+  );
+  assert.match(packageManifest.scripts.check, /corepack pnpm run security:audit$/);
+});

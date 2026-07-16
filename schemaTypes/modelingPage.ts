@@ -16,15 +16,6 @@ export const modelingPage = defineType({
 
   fields: [
     defineField({
-      name: "eyebrow",
-      title: "Eyebrow",
-      type: "string",
-      group: "content",
-      initialValue: "modeling & acting",
-      validation: (rule) => rule.required(),
-    }),
-
-    defineField({
       name: "heading",
       title: "Heading",
       type: "string",
@@ -77,7 +68,8 @@ export const modelingPage = defineType({
               name: "images",
               title: "Images",
               type: "array",
-              description: "Drag multiple headshots here to batch upload.",
+              description:
+                "Add 1–10 headshots. The site frontend responsively composes the ordered set.",
               of: [
                 {
                   type: "image",
@@ -93,7 +85,7 @@ export const modelingPage = defineType({
                 },
               ],
               options: { layout: "grid" },
-              validation: (rule) => rule.required().min(1),
+              validation: (rule) => rule.required().min(1).max(10),
             }),
             defineField({
               name: "isVisible",
